@@ -1,0 +1,38 @@
+* Org_mob_lexer
+
+TODO: Write description
+
+** Installation
+1. Add the dependency to your =shard.yml=
+
+#+begin_src yaml
+dependencies:
+  org_mob_lexer:
+    github: roy-corentin/org_mob_lexer
+#+end_src
+
+2. Run =shards install=
+
+** Usage
+
+#+begin_src crystal
+require "org_mob_lexer"
+#+end_src
+
+TODO: Write usage instruction
+
+** Development
+
+TODO: Write development instruction
+
+** Constributing
+
+1. Fork it (<https://github.com/roy-corentin/org_mob_lexer/fork>)
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+** Contributors
+
+- [[https://github.com/roy-corentin][Corentin Roy]] - creator and maintainer
