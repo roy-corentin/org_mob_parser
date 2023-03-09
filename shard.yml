@@ -1,0 +1,9 @@
+name: org_mob_lexer
+version: 0.1.0
+
+authors:
+  - Corentin Roy <croy@mesvaccins.net>
+
+crystal: 1.7.3
+
+license: MIT
