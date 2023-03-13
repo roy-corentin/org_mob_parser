@@ -25,7 +25,7 @@ TODO: Write usage instruction
 
 TODO: Write development instruction
 
-** Constributing
+** Contributing
 
 1. Fork it (<https://github.com/roy-corentin/org_mob_parser/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
