@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe OrgMobLexer do
+describe OrgMobParser do
   # TODO: Write tests
 
   it "works" do

@@ -1,4 +1,3 @@
-# TODO: Write documentation for `OrgMobLexer`
 require "./org_mob_configuration"
 require "./org_mob_format"
 require "json"
@@ -6,7 +5,8 @@ require "json"
 module OrgMob
   VERSION = "0.1.0"
 
-  class Lexer
+  # Class to parse your org files as OrgMob format
+  class Parser
     @@configuration = Configuration.new
 
     def self.configure
