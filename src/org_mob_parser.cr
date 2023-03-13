@@ -18,13 +18,13 @@ module OrgMob
     end
 
     private def self.parse_data(data : Array(String)) : Array(Hash(KeyType, ValueType))
-      output = [] of Lexed
+      output = [] of Parsed
       data.each_with_object(output, &self.call_appropriate_formater)
       return output
     end
 
     private def self.call_appropriate_formater
-      ->(line : String, array : Array(Lexed)) { REGEXS.each { |regex| array << FORMATERS[regex].call(line) if line.match(regex) } }
+      ->(line : String, array : Array(Parsed)) { REGEXS.each { |regex| array << FORMATERS[regex].call(line) if line.match(regex) } }
     end
 
     private def self.parse_todos(data : Array(String), todo_keywords : Array(String))

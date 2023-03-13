@@ -3,7 +3,7 @@ require "./org_mob_regex"
 module OrgMob
   alias KeyType = Symbol
   alias ValueType = String | Int32 | Nil
-  alias Lexed = Hash(KeyType, ValueType)
+  alias Parsed = Hash(KeyType, ValueType)
 
   FORMATERS = {TITLE_REGEX => ->OrgMob::Format.format_title(String)}
 
