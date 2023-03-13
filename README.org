@@ -35,7 +35,7 @@ end
 
 *** To Parse Your Text
 #+begin_src crystal
-OrgMob::Parser.parse("* Your Org\nyes your org note") # Return a json to the OrgMob Format
+OrgMob::Parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Format
 #+end_src
 
 ** Development
