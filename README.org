@@ -19,7 +19,24 @@ dependencies:
 require "org_mob_parser"
 #+end_src
 
-TODO: Write usage instruction
+*** For Custom TODO Keywords
+#+begin_src crystal
+OrgMob::Parser.configure do |c|
+  c.todo_keywords = ["TODO", "[ ]", "TODO 🚩", "DOING"]
+end
+#+end_src
+
+*** For Custom DONE Keywords
+#+begin_src crystal
+OrgMob::Parser.configure do |c|
+  c.done_keywords = ["DONE", "[X]", "DONE ❌"]
+end
+#+end_src
+
+*** To Parse Your Text
+#+begin_src crystal
+OrgMob::Parser.parse("* Your Org\nyes your org note") # Return a json to the OrgMob Format
+#+end_src
 
 ** Development
 
