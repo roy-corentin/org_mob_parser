@@ -21,15 +21,52 @@ describe OrgMob::Parser do
         end
       end
 
-      context "1) list" do
-        it "should have list as type" do
-          OrgMob::Parser.parse("1) List").first[:type].should eq("list")
+      context "number list" do
+        context ") list" do
+          it "should have list as type" do
+            OrgMob::Parser.parse("1) List").first[:type].should eq("list")
+          end
+        end
+
+        context ". list" do
+          it "should have list as type" do
+            OrgMob::Parser.parse("1. List").first[:type].should eq("list")
+          end
         end
       end
 
-      context "1. list" do
-        it "should have list as type" do
-          OrgMob::Parser.parse("1. List").first[:type].should eq("list")
+      context "alphabetical list" do
+        context "downcase" do
+          context ") list" do
+            it "should have list as type" do
+              OrgMob::Parser.parse("a) List").first[:type].should eq("list")
+            end
+          end
+
+          context ". list" do
+            it "should have list as type" do
+              OrgMob::Parser.parse("a. List").first[:type].should eq("list")
+            end
+          end
+        end
+        context "upcase" do
+          context ") list" do
+            it "should have list as type" do
+              OrgMob::Parser.parse("A) List").first[:type].should eq("list")
+            end
+          end
+
+          context ". list" do
+            it "should have list as type" do
+              OrgMob::Parser.parse("A. List").first[:type].should eq("list")
+            end
+          end
+        end
+      end
+
+      context "invalid list" do
+        it "should be empty" do
+          OrgMob::Parser.parse("1- List").empty?.should be_true
         end
       end
     end
