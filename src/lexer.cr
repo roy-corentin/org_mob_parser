@@ -2,9 +2,10 @@ require "./regex"
 
 module OrgMob
   alias Lexed = NamedTuple("type": Symbol, "content": String)
-  alias LexerFunctionType = Proc(String, NamedTuple("type": Symbol, "content": String))
 
   class Lexer
+    alias LexerFunctionType = Proc(String, NamedTuple("type": Symbol, "content": String))
+
     @@lexers : Hash(Regex, LexerFunctionType) = {TITLE_REGEX => ->title(String), LIST_REGEX => ->list(String)}
 
     def self.call(data : Array(String)) : Array(Lexed)
