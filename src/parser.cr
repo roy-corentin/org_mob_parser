@@ -1,5 +1,5 @@
-require "./org_mob_configuration"
-require "./org_mob_format"
+require "./configuration"
+require "./lexer"
 require "json"
 
 module OrgMob
