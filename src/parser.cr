@@ -13,18 +13,18 @@ module OrgMob
       yield @@configuration
     end
 
-    def self.parse(data : String) : Array(Formated)
+    def self.parse(data : String) : Array(Lexed)
       return self.parse_data(data.split('\n'))
     end
 
-    private def self.parse_data(data : Array(String)) : Array(Formated)
-      output = [] of Formated
-      data.each_with_object(output, &self.call_appropriate_formater)
+    private def self.parse_data(data : Array(String)) : Array(Lexed)
+      output = [] of Lexed
+      data.each_with_object(output, &self.call_appropriate_lexer)
       return output
     end
 
-    private def self.call_appropriate_formater
-      ->(line : String, array : Array(Formated)) { REGEXS.each { |regex| array << FORMATERS[regex].call(line) if line.match(regex) } }
+    private def self.call_appropriate_lexer
+      ->(line : String, array : Array(Lexed)) { REGEXS.each { |regex| array << LEXERS[regex].call(line) if line.match(regex) } }
     end
 
     private def self.parse_todos(data : Array(String), todo_keywords : Array(String))
