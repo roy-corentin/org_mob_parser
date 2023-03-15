@@ -65,8 +65,8 @@ describe OrgMob::Lexer do
       end
 
       context "invalid list" do
-        it "should be empty" do
-          OrgMob::Lexer.call(["1- List"]).empty?.should be_true
+        it "should have paragraph as type" do
+          OrgMob::Lexer.call(["1- List"]).first[:type].should eq(:paragraph)
         end
       end
     end
