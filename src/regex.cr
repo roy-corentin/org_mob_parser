@@ -4,7 +4,7 @@ module OrgMob
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/im
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/im
   PROPERTY_REGEX  = /^#\+(.*)/im
-  NEW_LINE_REGEX  = /^(\n+)/im
+  NEW_LINE_REGEX  = /^$/im
   PARAGRAPH_REGEX = /(.)*/im
 
   REGEXS = [
