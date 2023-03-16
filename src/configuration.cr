@@ -2,12 +2,17 @@ module OrgMob
   private class Configuration
     getter todo_keywords : Array(String)
 
-    def initialize(todo_keywords : Array(String) = ["TODO"])
+    def initialize(todo_keywords : Array(String) = ["TODO", "[ ]"], done_keywords : Array(String) = ["DONE", "[X]"])
       @todo_keywords = todo_keywords
+      @done_keywords = done_keywords
     end
 
     def todo_keywords=(new_todo_keywords)
       @todo_keywords = format_todo_keywords(new_todo_keywords)
+    end
+
+    def done_keywords=(new_done_keywords)
+      @done_keywords = format_done_keywords(new_done_keywords)
     end
 
     private def format_todo_keywords(todo_keywords)
