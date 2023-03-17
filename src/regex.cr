@@ -1,11 +1,11 @@
 module OrgMob
-  TITLE_REGEX     = /^\*+\s(?<title>.*)/im
-  LIST_REGEX      = /^(-|\+|([0-9]|[a-z]|[A-Z])(\.|\)))\s(?<item>.*)/im
-  CODE_REGEX      = /^#\+(begin|end)_src(.*)/im
-  QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/im
-  PROPERTY_REGEX  = /^#\+(?<keyword>\w+):(?<value>.*)/im
-  NEW_LINE_REGEX  = /^$/im
-  PARAGRAPH_REGEX = /(.)*/im
+  TITLE_REGEX     = /^\*+\s(?<title>.*)/i
+  LIST_REGEX      = /^(-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
+  CODE_REGEX      = /^#\+(begin|end)_src(.*)/i
+  QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/i
+  PROPERTY_REGEX  = /^#\+(?<keyword>\w+):(?<value>.*)/i
+  NEW_LINE_REGEX  = /^$/i
+  PARAGRAPH_REGEX = /(.)*/i
 
   REGEXS = [
     {type: :title, regex: TITLE_REGEX},
