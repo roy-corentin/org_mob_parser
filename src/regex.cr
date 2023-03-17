@@ -1,9 +1,9 @@
 module OrgMob
-  TITLE_REGEX     = /^\*+\s(.*)/im
-  LIST_REGEX      = /^(-|\+|([0-9]|[a-z]|[A-Z])(\.|\)))\s(.*)/im
+  TITLE_REGEX     = /^\*+\s(?<title>.*)/im
+  LIST_REGEX      = /^(-|\+|([0-9]|[a-z]|[A-Z])(\.|\)))\s(?<item>.*)/im
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/im
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/im
-  PROPERTY_REGEX  = /^#\+(\w+):(.*)/im
+  PROPERTY_REGEX  = /^#\+(?<keyword>\w+):(?<value>.*)/im
   NEW_LINE_REGEX  = /^$/im
   PARAGRAPH_REGEX = /(.)*/im
 
