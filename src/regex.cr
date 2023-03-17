@@ -3,7 +3,7 @@ module OrgMob
   LIST_REGEX      = /^(-|\+|([0-9]|[a-z]|[A-Z])(\.|\)))\s(.*)/im
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/im
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/im
-  PROPERTY_REGEX  = /^#\+(.*)/im
+  PROPERTY_REGEX  = /^#\+(\w+):(.*)/im
   NEW_LINE_REGEX  = /^$/im
   PARAGRAPH_REGEX = /(.)*/im
 
