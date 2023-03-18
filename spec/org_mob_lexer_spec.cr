@@ -121,10 +121,21 @@ describe OrgMob::Lexer do
       end
     end
 
+    context "keyword" do
+      context "org keyword" do
+        it "should have keyword as type" do
+          result = OrgMob::Lexer.call(["#+title: Note Title", "#+author: Corentin Roy", "#+startup: overview"])
+          result.each do |r|
+            r[:type].should eq(:keyword)
+          end
+        end
+      end
+    end
+
     context "property" do
       context "org property" do
         it "should have property as type" do
-          result = OrgMob::Lexer.call(["#+title: Note Title", "#+startup: overview"])
+          result = OrgMob::Lexer.call([":PROPERTIES:", ":ID:     be3ab0a1-01a8-46a5-bcdf-ed1b9deec0d9", ":END:"])
           result.each do |r|
             r[:type].should eq(:property)
           end
