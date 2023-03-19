@@ -1,7 +1,7 @@
 require "./regex"
 
 module OrgMob
-  alias Lexed = NamedTuple("type": Symbol, "content": String)
+  alias Lexed = NamedTuple("type": Symbol, "content": String, "match": Regex::MatchData)
 
   class Lexer
     alias LexerFunctionType = Proc(String, NamedTuple("type": Symbol, "content": String))
@@ -10,12 +10,18 @@ module OrgMob
       return data.each_with_object([] of Lexed, &self.call_appropriate_lexer)
     end
 
-    def self.format(type : Symbol, content : String) : Lexed
-      {type: type, content: content}
+    def self.format(type : Symbol, content : String, match : Regex::MatchData) : Lexed
+      {type: type, content: content, match: match}
     end
 
     private def self.call_appropriate_lexer
-      ->(line : String, array : Array(Lexed)) { REGEXS.each { |regex| return array << self.format(regex[:type], line) if line.match(regex[:regex]) } }
+      ->(line : String, array : Array(Lexed)) do
+        REGEXS.each do |regex|
+          if match_data = line.match(regex[:regex])
+            return array << self.format(regex[:type], line, match_data)
+          end
+        end
+      end
     end
   end
 end
