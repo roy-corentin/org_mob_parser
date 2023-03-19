@@ -3,8 +3,8 @@ module OrgMob
   LIST_REGEX      = /^(-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/i
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/i
-  KEYWORD_REGEX   = /^#\+(?<keyword>\w+):(?<value>.+)/i
-  PROPERTY_REGEX  = /^:(?<property>\w+):\s*(?<value>.*)/i
+  KEYWORD_REGEX   = /^#\+(?<key>\w+):(?<value>.+)/i
+  PROPERTY_REGEX  = /^:(?<key>\w+):\s*(?<value>.*)/i
   NEW_LINE_REGEX  = /^$/i
   PARAGRAPH_REGEX = /(.)*/i
 
