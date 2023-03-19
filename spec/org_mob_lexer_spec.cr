@@ -4,7 +4,7 @@ describe OrgMob::Lexer do
   describe "#self.call" do
     context "title" do
       it "should have title as type" do
-        OrgMob::Lexer.call(["* Title"]).first[:type].should eq(:title)
+        OrgMob::Lexer.call(["* Title"]).first[:type].should eq(:header)
       end
     end
 

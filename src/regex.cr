@@ -1,5 +1,5 @@
 module OrgMob
-  TITLE_REGEX     = /^\*+\s(?<title>.*)/i
+  HEADER_REGEX    = /^\*+\s(?<title>.*)/i
   LIST_REGEX      = /^(-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/i
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/i
@@ -9,7 +9,7 @@ module OrgMob
   PARAGRAPH_REGEX = /(.)*/i
 
   REGEXS = [
-    {type: :title, regex: TITLE_REGEX},
+    {type: :header, regex: HEADER_REGEX},
     {type: :list, regex: LIST_REGEX},
     {type: :code, regex: CODE_REGEX},
     {type: :quote, regex: QUOTE_REGEX},
