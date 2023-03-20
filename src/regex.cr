@@ -1,6 +1,6 @@
 module OrgMob
-  HEADER_REGEX    = /^\*+\s(?<title>.*)/i
-  LIST_REGEX      = /^(-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
+  HEADER_REGEX    = /^(?<level>\*+)\s(?<title>.*)/i
+  LIST_REGEX      = /^(?<bullet>-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/i
   QUOTE_REGEX     = /^#\+(begin|end)_quote(.*)/i
   KEYWORD_REGEX   = /^#\+(?<key>\w+):(?<value>.+)/i
