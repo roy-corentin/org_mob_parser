@@ -29,21 +29,14 @@ module OrgMob
     def self.parse_lexed_data(data : Array(Lexed)) : String
       JSON.build do |json|
         json.object do
-          self.create_base_object(data, json)
+          self.create_header(data, json)
           json.field "childrens" do
             json.array do
               parse_from_object(data, json)
-              json.end_array
-              json.end_object
+              close_unterminated_object(json)
             end
           end
         end
-      end
-    end
-
-    private def self.parse_from_object(data : Array(Lexed), json : JSON::Builder)
-      while data.any? && ((element = data.first))
-        PARSERS[element[:type]].call(data, json)
       end
     end
 
@@ -80,7 +73,7 @@ module OrgMob
       priority_match = element[:match]["title"].match /\[\#(?<priority>[A-Z])\]\s*(?<title>.*)/
       value = todo_match ? (priority_match ? priority_match["title"] : todo_match["title"]) : element[:match]["title"]
 
-      close_last_header_if_needed(level, json)
+      close_last_headers(level, json) unless first_header?
 
       @@current_level = level
 
@@ -98,11 +91,9 @@ module OrgMob
       end
     end
 
-    private def self.close_last_header_if_needed(level : Int32, json : JSON::Builder)
-      return if first_header?
+    private def self.close_last_headers(level : Int32, json : JSON::Builder)
       tmp = @@current_level
       while level <= tmp
-        puts "Quit children last header"
         json.end_array
         json.end_object
         tmp -= 1
@@ -135,7 +126,7 @@ module OrgMob
       end
     end
 
-    private def self.create_base_object(data : Array(Lexed), json : JSON::Builder)
+    private def self.create_header(data : Array(Lexed), json : JSON::Builder)
       while %i[property keyword].includes?(type = data.first[:type])
         PARSERS[type].call(data, json)
       end
@@ -151,6 +142,19 @@ module OrgMob
 
     private def self.first_header?
       @@current_level == 0
+    end
+
+    private def self.parse_from_object(data : Array(Lexed), json : JSON::Builder)
+      while data.any? && ((element = data.first))
+        PARSERS[element[:type]].call(data, json)
+      end
+    end
+
+    private def self.close_unterminated_object(json : JSON::Builder)
+      if @@current_level != 0
+        json.end_array
+        json.end_object
+      end
     end
   end
 end
