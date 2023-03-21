@@ -8,14 +8,14 @@ module OrgMob
     end
 
     def todo_keywords=(new_todo_keywords)
-      @todo_keywords = format_todo_keywords(new_todo_keywords)
+      @todo_keywords = format_keywords(new_todo_keywords)
     end
 
     def done_keywords=(new_done_keywords)
-      @done_keywords = format_done_keywords(new_done_keywords)
+      @done_keywords = format_keywords(new_done_keywords)
     end
 
-    private def format_todo_keywords(todo_keywords)
+    private def format_keywords(todo_keywords)
       return todo_keywords.map { |keyword| Regex.escape(keyword) }
     end
   end

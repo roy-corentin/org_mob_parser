@@ -76,7 +76,7 @@ module OrgMob
     def self.parse_header(data : Array(Lexed), json : JSON::Builder)
       element = data.shift
       level = element[:match]["level"].size
-      todo_match = element[:match]["title"].match /^(?<todo_key>#{@@configuration.todo_keywords.join("|")})\s?(?<title>.*)/
+      todo_match = element[:match]["title"].match /^(?<todo_key>#{@@configuration.keywords})\s?(?<title>.*)/
       priority_match = element[:match]["title"].match /\[\#(?<priority>[A-Z])\]\s*(?<title>.*)/
       value = todo_match ? (priority_match ? priority_match["title"] : todo_match["title"]) : element[:match]["title"]
 
