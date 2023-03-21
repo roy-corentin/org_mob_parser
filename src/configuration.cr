@@ -15,6 +15,10 @@ module OrgMob
       @done_keywords = format_keywords(new_done_keywords)
     end
 
+    def keywords
+      (@todo_keywords + @done_keywords).join("|")
+    end
+
     private def format_keywords(todo_keywords)
       return todo_keywords.map { |keyword| Regex.escape(keyword) }
     end
