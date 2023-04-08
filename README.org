@@ -1,8 +1,10 @@
-* Org_mob_parser
+* ORG MOB PARSER
 
 Org Mob is an mobile application to read and manage todo list with [[https://orgmode.org/][OrgMode]] format
 
 This parser will be used by the application backend
+
+The format is very similar to [[https://github.com/rasendubi/uniorg][UniOrg format]] and there is on desire for compatibility at this time.
 
 ** Installation
 1. Add the dependency to your =shard.yml=
