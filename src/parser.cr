@@ -33,7 +33,6 @@ module OrgMob
           json.field "childrens" do
             json.array do
               parse_from_object(data, json)
-              close_unterminated_object(json)
             end
           end
         end
@@ -73,30 +72,17 @@ module OrgMob
       priority_match = element[:match]["title"].match /\[\#(?<priority>[A-Z])\]\s*(?<title>.*)/
       value = todo_match ? (priority_match ? priority_match["title"] : todo_match["title"]) : element[:match]["title"]
 
-      close_last_headers(level, json) unless first_header?
-
       @@current_level = level
 
-      json.start_object
-      json.field "type", element[:type]
-      json.field "level", level
-      json.field "todo_keywords", todo_match ? todo_match["todo_key"] : nil
-      json.field "priority", priority_match ? priority_match["priority"] : nil
-      json.field "value", value
+      json.object do
+        json.field "type", element[:type]
+        json.field "level", level
+        json.field "todo_keywords", todo_match ? todo_match["todo_key"] : nil
+        json.field "priority", priority_match ? priority_match["priority"] : nil
 
-      json.field "children" do
-        json.start_array
-
-        parse_from_object(data, json)
-      end
-    end
-
-    private def self.close_last_headers(level : Int32, json : JSON::Builder)
-      tmp = @@current_level
-      while level <= tmp
-        json.end_array
-        json.end_object
-        tmp -= 1
+        json.field "children" do
+          self.parse_text(value, json)
+        end
       end
     end
 
@@ -104,7 +90,9 @@ module OrgMob
       element = data.shift
       json.object do
         json.field "type", element[:type]
-        json.field "value", element[:content]
+        json.field "children" do
+          self.parse_text(element[:content], json)
+        end
       end
     end
 
@@ -121,6 +109,51 @@ module OrgMob
                 json.field "item", element[:match]["item"]
               end
             end
+          end
+        end
+      end
+    end
+
+    def self.parse_text(text : String, json : JSON::Builder)
+      json.array do
+        while text.size > 0
+          case text
+          when /(?<before>.*?)\*(?<inside>[^*]+)\*(?<after>.*)/
+            json.object do
+              json.field "content", $~["before"]
+              json.field "type", "basic"
+            end
+            json.object do
+              json.field "content", $~["inside"]
+              json.field "type", "bold"
+            end
+            text = $~["after"]
+          when /(?<before>.*?)\/(?<inside>[^\/]+)\/(?<after>.*)/
+            json.object do
+              json.field "content", $~["before"]
+              json.field "type", "basic"
+            end
+            json.object do
+              json.field "content", $~["inside"]
+              json.field "type", "italic"
+            end
+            text = $~["after"]
+          when /(?<before>.*?)_(?<inside>[^_]+)_(?<after>.*)/
+            json.object do
+              json.field "content", $~["before"]
+              json.field "type", "basic"
+            end
+            json.object do
+              json.field "content", $~["inside"]
+              json.field "type", "underline"
+            end
+            text = $~["after"]
+          else
+            json.object do
+              json.field "content", text
+              json.field "type", "basic"
+            end
+            text = ""
           end
         end
       end
@@ -145,15 +178,9 @@ module OrgMob
     end
 
     private def self.parse_from_object(data : Array(Lexed), json : JSON::Builder)
-      while data.any? && ((element = data.first))
-        PARSERS[element[:type]].call(data, json)
-      end
-    end
-
-    private def self.close_unterminated_object(json : JSON::Builder)
-      if @@current_level != 0
-        json.end_array
-        json.end_object
+      while data.any? && ((type = data.first[:type]))
+        puts "yeah"
+        PARSERS[type].call(data, json)
       end
     end
   end
