@@ -116,7 +116,7 @@ module OrgMob
 
     def self.parse_text(text : String, json : JSON::Builder)
       json.array do
-        while text.size > 0
+        until text.empty?
           case text
           when /(?<before>.*?)\*(?<inside>[^*]+)\*(?<after>.*)/
             json.object do
@@ -179,7 +179,6 @@ module OrgMob
 
     private def self.parse_from_object(data : Array(Lexed), json : JSON::Builder)
       while data.any? && ((type = data.first[:type]))
-        puts "yeah"
         PARSERS[type].call(data, json)
       end
     end
