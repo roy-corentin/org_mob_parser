@@ -2,7 +2,11 @@ name: org_mob_parser
 version: 0.1.0
 
 authors:
-  - Corentin Roy <croy@mesvaccins.net>
+  - Corentin Roy <corentin.roy02@laposte.net>
+
+targets:
+  org_mob_parser:
+    main: src/parser.cr
 
 crystal: 1.7.3
 
