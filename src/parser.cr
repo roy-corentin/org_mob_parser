@@ -4,7 +4,7 @@ require "./exception"
 require "json"
 
 module OrgMobParser
-  VERSION = "0.1.0"
+  VERSION = "0.1.2"
 
   # Class to parse your org files as OrgMob format
   class Parser
