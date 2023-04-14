@@ -1,6 +1,6 @@
 require "./regex"
 
-module OrgMob
+module OrgMobParser
   alias Lexed = NamedTuple("type": Symbol, "content": String, "match": Regex::MatchData)
 
   class Lexer

@@ -3,7 +3,7 @@ require "./lexer"
 require "./exception"
 require "json"
 
-module OrgMob
+module OrgMobParser
   VERSION = "0.1.0"
 
   # Class to parse your org files as OrgMob format

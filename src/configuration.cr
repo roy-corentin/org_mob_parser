@@ -1,4 +1,4 @@
-module OrgMob
+module OrgMobParser
   private class Configuration
     getter todo_keywords : Array(String)
 

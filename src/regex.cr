@@ -1,4 +1,4 @@
-module OrgMob
+module OrgMobParser
   HEADER_REGEX    = /^(?<level>\*+)\s(?<title>.*)/i
   LIST_REGEX      = /^(?<bullet>-|\+|([0-9]|[a-z])(\.|\)))\s(?<item>.*)/i
   CODE_REGEX      = /^#\+(begin|end)_src(.*)/i
