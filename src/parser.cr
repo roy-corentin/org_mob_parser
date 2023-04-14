@@ -20,7 +20,7 @@ module OrgMobParser
       splited_data : Array(String) = data.split('\n')
       lexed_data = Lexer.call(splited_data)
       json_text = self.parse_lexed_data(lexed_data)
-    rescue error : OrgMob::Exception
+    rescue error : OrgMobParser::Exception
       return error.json_content
     else
       return json_text
@@ -40,12 +40,12 @@ module OrgMobParser
     end
 
     def self.parse_properties(data : Array(Lexed), json : JSON::Builder)
-      raise OrgMob::Exception.new("Property attribute is missing") unless beginning_properties?(data)
+      raise OrgMobParser::Exception.new("Property attribute is missing") unless beginning_properties?(data)
       json.field "properties" do
         json.object do
           while data.any? && !end_properties?(data.first)
             element = data.shift
-            raise OrgMob::Exception.new("END Property attribute is missing") if element[:type] != :property
+            raise OrgMobParser::Exception.new("END Property attribute is missing") if element[:type] != :property
             match = element[:match]
             json.field match["property"], match["value"]
           end
