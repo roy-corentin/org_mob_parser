@@ -30,7 +30,7 @@ module OrgMobParser
       JSON.build do |json|
         json.object do
           self.create_header(data, json)
-          json.field "childrens" do
+          json.field "content" do
             json.array do
               parse_from_object(data, json)
             end
@@ -77,7 +77,7 @@ module OrgMobParser
       json.object do
         json.field "type", element[:type]
         json.field "level", level
-        json.field "todo_keywords", todo_match ? todo_match["todo_key"] : nil
+        json.field "todo_keyword", todo_match ? todo_match["todo_key"] : nil
         json.field "priority", priority_match ? priority_match["priority"] : nil
 
         json.field "children" do
