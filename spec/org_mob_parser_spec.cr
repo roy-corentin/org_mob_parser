@@ -9,6 +9,33 @@ describe OrgMobParser::Parser do
       end
     end
 
+    context "list text" do
+      it "should parse + list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"+\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("+ list\n+ of\n+ items").should eq(expected)
+      end
+      it "should parse - list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"-\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("- list\n- of\n- items").should eq(expected)
+      end
+      it "should parse 1. list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"1.\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("1. list\n2. of\n3. items").should eq(expected)
+      end
+      it "should parse 1) list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"1)\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("1) list\n2) of\n3) items").should eq(expected)
+      end
+      it "should parse a. list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"a.\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("a. list\nb. of\nc. items").should eq(expected)
+      end
+      it "should parse a) list" do
+        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"a)\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        OrgMobParser::Parser.parse("a) list\nb) of\nc) items").should eq(expected)
+      end
+    end
+
     context "todo keywords configured" do
       it "should detect custom keywords" do
         OrgMobParser::Parser.configure do |c|
