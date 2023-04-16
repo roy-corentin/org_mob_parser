@@ -8,7 +8,7 @@ module OrgMobParser
     end
 
     def todo_keywords=(new_todo_keywords)
-      @todo_keywords = format_keywords(new_todo_keywords)
+      @todo_keywords = format_keywords(new_todo_keywords).reverse
     end
 
     def done_keywords=(new_done_keywords)
