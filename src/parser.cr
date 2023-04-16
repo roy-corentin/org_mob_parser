@@ -98,15 +98,17 @@ module OrgMobParser
 
     def self.parse_list(data : Array(Lexed), json : JSON::Builder)
       json.object do
-        json.field "type", "list-item"
-        json.field "bullet", data.first[:match]["bullet"]
+        json.field "type", "plain-list"
         json.field "children" do
           json.array do
             while data.any? && data.first[:type] == :list
               json.object do
                 element = data.shift
-                json.field "type", "paragraph"
-                json.field "item", element[:match]["item"]
+                json.field "type", "list-item"
+                json.field "bullet", element[:match]["bullet"]
+                json.field "children" do
+                  self.parse_text(element[:match]["item"], json)
+                end
               end
             end
           end

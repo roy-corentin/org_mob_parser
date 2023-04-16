@@ -11,27 +11,27 @@ describe OrgMobParser::Parser do
 
     context "list text" do
       it "should parse + list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"+\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"+\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"+\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"+\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("+ list\n+ of\n+ items").should eq(expected)
       end
       it "should parse - list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"-\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"-\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"-\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"-\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("- list\n- of\n- items").should eq(expected)
       end
       it "should parse 1. list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"1.\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"1.\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"2.\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"3.\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("1. list\n2. of\n3. items").should eq(expected)
       end
       it "should parse 1) list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"1)\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"1)\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"2)\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"3)\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("1) list\n2) of\n3) items").should eq(expected)
       end
       it "should parse a. list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"a.\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"a.\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"b.\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"c.\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("a. list\nb. of\nc. items").should eq(expected)
       end
       it "should parse a) list" do
-        expected = "{\"content\":[{\"type\":\"list-item\",\"bullet\":\"a)\",\"children\":[{\"type\":\"paragraph\",\"item\":\"list\"},{\"type\":\"paragraph\",\"item\":\"of\"},{\"type\":\"paragraph\",\"item\":\"items\"}]}]}"
+        expected = "{\"content\":[{\"type\":\"plain-list\",\"children\":[{\"type\":\"list-item\",\"bullet\":\"a)\",\"children\":[{\"content\":\"list\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"b)\",\"children\":[{\"content\":\"of\",\"type\":\"basic\"}]},{\"type\":\"list-item\",\"bullet\":\"c)\",\"children\":[{\"content\":\"items\",\"type\":\"basic\"}]}]}]}"
         OrgMobParser::Parser.parse("a) list\nb) of\nc) items").should eq(expected)
       end
     end
