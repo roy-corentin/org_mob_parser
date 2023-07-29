@@ -8,8 +8,10 @@ module OrgMob
 
   # Class to parse your org files as OrgMob format
   class Parser
-    @current_level = 0
-    @configuration = Configuration.new
+    def initialize
+      @current_level = 0
+      @configuration = Configuration.new
+    end
 
     def configure
       yield @configuration
