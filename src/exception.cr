@@ -1,4 +1,4 @@
-module OrgMobParser
+module OrgMob
   class Exception < ::Exception
     getter json_content : String
 

@@ -1,8 +1,11 @@
-module OrgMobParser
+module OrgMob
+  DEFAULT_TODO_KEYWORDS = ["TODO", "[ ]"]
+  DEFAULT_DONE_KEYWORDS = ["DONE", "[X]"]
+
   private class Configuration
     getter todo_keywords : Array(String)
 
-    def initialize(todo_keywords : Array(String) = ["TODO", "[ ]"], done_keywords : Array(String) = ["DONE", "[X]"])
+    def initialize(todo_keywords : Array(String) = DEFAULT_TODO_KEYWORDS, done_keywords : Array(String) = DEFAULT_DONE_KEYWORDS)
       @todo_keywords = todo_keywords
       @done_keywords = done_keywords
     end

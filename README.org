@@ -25,21 +25,26 @@ require "org_mob_parser"
 
 *** For Custom TODO Keywords
 #+begin_src crystal
-OrgMobParser::Parser.configure do |c|
+parser = OrgMob::Parser.new
+
+parser.configure do |c|
   c.todo_keywords = ["TODO", "[ ]", "TODO 🚩", "DOING"]
 end
 #+end_src
 
 *** For Custom DONE Keywords
 #+begin_src crystal
-OrgMobParser::Parser.configure do |c|
+parser = OrgMob::Parser.new
+
+parser.configure do |c|
   c.done_keywords = ["DONE", "[X]", "DONE ❌"]
 end
 #+end_src
 
 *** To Parse Your Text
 #+begin_src crystal
-OrgMobParser::Parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Format
+parser = OrgMob::Parser.new
+parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Format
 #+end_src
 
 ** Development
