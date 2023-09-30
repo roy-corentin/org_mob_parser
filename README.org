@@ -7,7 +7,7 @@ OrgMobParser was developed with the primary purpose of serving as the parsing en
 However, it is a versatile tool, and you are free to use it in any way that suits your needs!
 
 ** Features
-+ =Blazingly= Fast: Thanks to Crystal's efficiency, OrgMobParser offers exceptional parsing speed for Org files.
++ =Blazingly Fast=: Thanks to Crystal's efficiency, OrgMobParser offers exceptional parsing speed for Org files.
 + =Easy Integration=: Seamlessly integrate OrgMobParser into your Crystal projects or any compatible application.
 + =Inspired by UniOrg=: The format used by OrgMobParser closely resembles that of [[https://github.com/rasendubi/uniorg][UniOrg]]. However, please note that full compatibility with UniOrg is not a current priority.
 
