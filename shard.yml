@@ -8,6 +8,6 @@ targets:
   org_mob_parser:
     main: src/parser.cr
 
-crystal: 1.8.0
+crystal: 1.9.2
 
 license: MIT
