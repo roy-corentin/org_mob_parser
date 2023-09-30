@@ -1,10 +1,15 @@
 * ORG MOB PARSER
 
-Org Mob is an mobile application to read and manage todo list with [[https://orgmode.org/][OrgMode]] format
+OrgMobParser is a high-performance parser for [[https://orgmode.org/][Org]] files, powered by the Crystal programming language.
 
-This parser will be used by the application backend
+** Introduction
+OrgMobParser was developed with the primary purpose of serving as the parsing engine for a backend application known as =OrgMob= (Work in Progress).
+However, it is a versatile tool, and you are free to use it in any way that suits your needs!
 
-The format is very similar to [[https://github.com/rasendubi/uniorg][UniOrg format]] and there is no desire for compatibility at this time.
+** Features
++ =Blazingly= Fast: Thanks to Crystal's efficiency, OrgMobParser offers exceptional parsing speed for Org files.
++ =Easy Integration=: Seamlessly integrate OrgMobParser into your Crystal projects or any compatible application.
++ =Inspired by UniOrg=: The format used by OrgMobParser closely resembles that of [[https://github.com/rasendubi/uniorg][UniOrg]]. However, please note that full compatibility with UniOrg is not a current priority.
 
 ** Installation
 1. Add the dependency to your =shard.yml=
