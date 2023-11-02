@@ -4,33 +4,38 @@ describe OrgMob::Lexer do
   describe "#self.call" do
     context "title" do
       it "should have title as type" do
-        OrgMob::Lexer.call(["* Title"]).first[:type].should eq(:header)
+        lexer = OrgMob::Lexer.new
+        lexer.call(["* Title"]).first[:type].should eq(:header)
       end
     end
 
     context "lists" do
       context "dash list" do
         it "should have list as type" do
-          OrgMob::Lexer.call(["- List"]).first[:type].should eq(:list)
+          lexer = OrgMob::Lexer.new
+          lexer.call(["- List"]).first[:type].should eq(:list)
         end
       end
 
       context "+ list" do
         it "should have list as type" do
-          OrgMob::Lexer.call(["+ List"]).first[:type].should eq(:list)
+          lexer = OrgMob::Lexer.new
+          lexer.call(["+ List"]).first[:type].should eq(:list)
         end
       end
 
       context "number list" do
         context ") list" do
           it "should have list as type" do
-            OrgMob::Lexer.call(["1) List"]).first[:type].should eq(:list)
+            lexer = OrgMob::Lexer.new
+            lexer.call(["1) List"]).first[:type].should eq(:list)
           end
         end
 
         context ". list" do
           it "should have list as type" do
-            OrgMob::Lexer.call(["1. List"]).first[:type].should eq(:list)
+            lexer = OrgMob::Lexer.new
+            lexer.call(["1. List"]).first[:type].should eq(:list)
           end
         end
       end
@@ -39,26 +44,30 @@ describe OrgMob::Lexer do
         context "downcase" do
           context ") list" do
             it "should have list as type" do
-              OrgMob::Lexer.call(["a) List"]).first[:type].should eq(:list)
+              lexer = OrgMob::Lexer.new
+              lexer.call(["a) List"]).first[:type].should eq(:list)
             end
           end
 
           context ". list" do
             it "should have list as type" do
-              OrgMob::Lexer.call(["a. List"]).first[:type].should eq(:list)
+              lexer = OrgMob::Lexer.new
+              lexer.call(["a. List"]).first[:type].should eq(:list)
             end
           end
         end
         context "upcase" do
           context ") list" do
             it "should have list as type" do
-              OrgMob::Lexer.call(["A) List"]).first[:type].should eq(:list)
+              lexer = OrgMob::Lexer.new
+              lexer.call(["A) List"]).first[:type].should eq(:list)
             end
           end
 
           context ". list" do
             it "should have list as type" do
-              OrgMob::Lexer.call(["A. List"]).first[:type].should eq(:list)
+              lexer = OrgMob::Lexer.new
+              lexer.call(["A. List"]).first[:type].should eq(:list)
             end
           end
         end
@@ -66,7 +75,8 @@ describe OrgMob::Lexer do
 
       context "invalid list" do
         it "should have paragraph as type" do
-          OrgMob::Lexer.call(["1- List"]).first[:type].should eq(:paragraph)
+          lexer = OrgMob::Lexer.new
+          lexer.call(["1- List"]).first[:type].should eq(:paragraph)
         end
       end
     end
@@ -74,7 +84,8 @@ describe OrgMob::Lexer do
     context "block code" do
       context "downcase" do
         it "should have code as type" do
-          result = OrgMob::Lexer.call(["#+begin_src elisp", "(sum 1, 2)", "#+end_src"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call(["#+begin_src elisp", "(sum 1, 2)", "#+end_src"])
 
           result.first[:type].should eq(:code)
           result.last[:type].should eq(:code)
@@ -82,7 +93,8 @@ describe OrgMob::Lexer do
       end
       context "upcase" do
         it "should have code as type" do
-          result = OrgMob::Lexer.call(["#+BEGIN_SRC elisp", "(sum 1, 2)", "#+END_SRC"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call(["#+BEGIN_SRC elisp", "(sum 1, 2)", "#+END_SRC"])
 
           result.first[:type].should eq(:code)
           result.last[:type].should eq(:code)
@@ -93,7 +105,8 @@ describe OrgMob::Lexer do
     context "block quote" do
       context "downcase" do
         it "should have code as type" do
-          result = OrgMob::Lexer.call(["#+begin_quote", "I'm a quote", "#+end_quote"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call(["#+begin_quote", "I'm a quote", "#+end_quote"])
 
           result.first[:type].should eq(:quote)
           result.last[:type].should eq(:quote)
@@ -101,7 +114,8 @@ describe OrgMob::Lexer do
       end
       context "upcase" do
         it "should have code as type" do
-          result = OrgMob::Lexer.call(["#+BEGIN_quote elisp", "I'm a quote", "#+END_quote"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call(["#+BEGIN_quote elisp", "I'm a quote", "#+END_quote"])
 
           result.first[:type].should eq(:quote)
           result.last[:type].should eq(:quote)
@@ -111,20 +125,23 @@ describe OrgMob::Lexer do
 
     context "new line" do
       it "should have new_line as type" do
-        OrgMob::Lexer.call([""]).first[:type].should eq(:new_line)
+        lexer = OrgMob::Lexer.new
+        lexer.call([""]).first[:type].should eq(:new_line)
       end
     end
 
     context "paragraph" do
       it "should have paragraph as type" do
-        OrgMob::Lexer.call(["This is a pragraph"]).first[:type].should eq(:paragraph)
+        lexer = OrgMob::Lexer.new
+        lexer.call(["This is a pragraph"]).first[:type].should eq(:paragraph)
       end
     end
 
     context "keyword" do
       context "org keyword" do
         it "should have keyword as type" do
-          result = OrgMob::Lexer.call(["#+title: Note Title", "#+author: Corentin Roy", "#+startup: overview"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call(["#+title: Note Title", "#+author: Corentin Roy", "#+startup: overview"])
           result.each do |r|
             r[:type].should eq(:keyword)
           end
@@ -135,7 +152,8 @@ describe OrgMob::Lexer do
     context "property" do
       context "org property" do
         it "should have property as type" do
-          result = OrgMob::Lexer.call([":PROPERTIES:", ":ID:     be3ab0a1-01a8-46a5-bcdf-ed1b9deec0d9", ":END:"])
+          lexer = OrgMob::Lexer.new
+          rlexer.call([":PROPERTIES:", ":ID:     be3ab0a1-01a8-46a5-bcdf-ed1b9deec0d9", ":END:"])
           result.each do |r|
             r[:type].should eq(:property)
           end

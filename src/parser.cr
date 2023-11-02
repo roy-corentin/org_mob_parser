@@ -11,6 +11,7 @@ module OrgMob
     def initialize
       @current_level = 0
       @configuration = Configuration.new
+      @lexer = Lexer.new
     end
 
     def configure
@@ -19,7 +20,7 @@ module OrgMob
 
     def parse(data : String) : String
       splited_data : Array(String) = data.split('\n')
-      lexed_data = Lexer.call(splited_data)
+      lexed_data = @lexer.call(splited_data)
       json_text = self.parse_lexed_data(lexed_data)
     rescue error : OrgMob::Exception
       return error.json_content
