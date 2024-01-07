@@ -8,7 +8,7 @@ module OrgMob
   NEW_LINE_REGEX  = /^$/i
   PARAGRAPH_REGEX = /(.)*/i
 
-  REGEXS = [
+  TOKENS = [
     {type: :header, regex: HEADER_REGEX},
     {type: :list, regex: LIST_REGEX},
     {type: :code, regex: CODE_REGEX},

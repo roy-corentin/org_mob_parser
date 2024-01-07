@@ -23,9 +23,9 @@ module OrgMob
       lexed_data = @lexer.call(splited_data)
       json_text = self.parse_lexed_data(lexed_data)
     rescue error : OrgMob::Exception
-      return error.json_content
+      error.json_content
     else
-      return json_text
+      json_text
     end
 
     def parse_lexed_data(data : Array(Lexed)) : String
