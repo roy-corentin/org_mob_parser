@@ -46,8 +46,8 @@ module OrgMob
     private def parse_body(data : Array(Lexed), json_builder : JSON::Builder)
       json_builder.field "content" do
         json_builder.array do
-          while data.any? && ((type = data.first[:type]))
-            parsers_by_type[type].call(data, json_builder)
+          while data.any? && ((token_type = data.first[:type]))
+            parsers_by_type[token_type].call(data, json_builder)
           end
         end
       end
@@ -163,26 +163,22 @@ module OrgMob
         until text.empty?
           case text
           when TEXT_WITH_BOLD_CONTENT
-            puts($~)
-            parse_text_regex("bold", $~, json_builder)
+            parse_text_regex_to_object("bold", $~, json_builder)
             text = $~["after"]
           when TEXT_WITH_ITALIC_CONTENT
-            parse_text_regex("italic", $~, json_builder)
+            parse_text_regex_to_object("italic", $~, json_builder)
             text = $~["after"]
           when TEXT_WITH_UNDERLINE_CONTENT
-            parse_text_regex("underline", $~, json_builder)
+            parse_text_regex_to_object("underline", $~, json_builder)
             text = $~["after"]
           when TEXT_WITH_VERBATIM_CONTENT
-            parse_text_regex("verbatim", $~, json_builder)
+            parse_text_regex_to_object("verbatim", $~, json_builder)
             text = $~["after"]
           when TEXT_WITH_CODE_CONTENT
-            parse_text_regex("code", $~, json_builder)
+            parse_text_regex_to_object("code", $~, json_builder)
             text = $~["after"]
           else
-            json_builder.object do
-              json_builder.field "content", text
-              json_builder.field "type", "basic"
-            end
+            parse_basic_text_to_object(text, json_builder)
             text = ""
           end
         end
@@ -201,7 +197,7 @@ module OrgMob
       @current_level == 0
     end
 
-    private def parse_text_regex(emphasis_type : String, match_data : Regex::MatchData, json_builder : JSON::Builder)
+    private def parse_text_regex_to_object(emphasis_type : String, match_data : Regex::MatchData, json_builder : JSON::Builder)
       json_builder.object do
         json_builder.field "content", match_data["before"]
         json_builder.field "type", "basic"
@@ -209,6 +205,13 @@ module OrgMob
       json_builder.object do
         json_builder.field "content", match_data["inside"]
         json_builder.field "type", emphasis_type
+      end
+    end
+
+    private def parse_basic_text_to_object(text : String, json_builder : JSON::Builder)
+      json_builder.object do
+        json_builder.field "content", text
+        json_builder.field "type", "basic"
       end
     end
   end
