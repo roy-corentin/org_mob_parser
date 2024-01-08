@@ -38,8 +38,15 @@ module OrgMob
     end
 
     private def parse_head(data : Array(Lexed), json_builder : JSON::Builder)
-      while %i[property keyword].includes?(token_type = data.first[:type])
-        parsers_by_type[token_type].call(data, json_builder)
+      json_builder.field "header" do
+        json_builder.object do
+          if ((token_type = data.first[:type])) == :property
+            parse_properties(data, json_builder)
+          end
+          if ((token_type = data.first[:type])) == :keyword
+            parse_keywords(data, json_builder)
+          end
+        end
       end
     end
 
@@ -55,8 +62,8 @@ module OrgMob
 
     private def parsers_by_type
       {
-        keyword:   ->parse_keywords(Array(Lexed), JSON::Builder),
         property:  ->parse_properties(Array(Lexed), JSON::Builder),
+        keyword:   ->parse_keywords(Array(Lexed), JSON::Builder),
         header:    ->parse_header(Array(Lexed), JSON::Builder),
         paragraph: ->parse_paragraph(Array(Lexed), JSON::Builder),
         list:      ->parse_list(Array(Lexed), JSON::Builder),
@@ -64,30 +71,34 @@ module OrgMob
       }
     end
 
-    private def parse_keywords(data : Array(Lexed), json_builder : JSON::Builder)
-      json_builder.field "keywords" do
-        json_builder.object do
-          while data.any? && data.first[:type] == :keyword
-            match = data.shift[:match]
-            json_builder.field match["key"], match["value"]
-          end
-        end
-      end
-    end
-
     private def parse_properties(data : Array(Lexed), json_builder : JSON::Builder)
       raise OrgMob::Exception.new("Start property token is missing") unless beginning_properties?(data)
 
       json_builder.field "properties" do
-        json_builder.object do
-          while data.any?
-            return data.shift if end_properties?(data.first)
+        json_builder.array do
+          while data.any? && !end_properties?(data.first)
             token = data.shift
 
             match = token[:match]
-            json_builder.field match["property"], match["value"]
+            json_builder.object do
+              json_builder.field match["property"], match["value"]
+            end
           end
-          raise OrgMob::Exception.new("END Property attribute is missing") if token.nil? || token[:type] != :property
+          raise OrgMob::Exception.new("END Property attribute is missing") if !data.any? || data.shift[:type] != :property
+        end
+      end
+    end
+
+    private def parse_keywords(data : Array(Lexed), json_builder : JSON::Builder)
+      json_builder.field "keywords" do
+        json_builder.array do
+          while data.any? && data.first[:type] == :keyword
+            token = data.shift
+            match = token[:match]
+            json_builder.object do
+              json_builder.field match["key"], match["value"]
+            end
+          end
         end
       end
     end

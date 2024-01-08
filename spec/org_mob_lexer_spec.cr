@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 describe OrgMob::Lexer do
-  describe "#self.call" do
+  describe "#call" do
     context "title" do
       it "should have title as type" do
         lexer = OrgMob::Lexer.new
