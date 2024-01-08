@@ -19,7 +19,7 @@ module OrgMob
     end
 
     def parse(data : String) : String
-      splited_data : Array(String) = data.split('\n')
+      splited_data = data.split('\n')
       lexed_data = @lexer.call(splited_data)
       json_text = parse_lexed_data_to_json(lexed_data)
     rescue error : OrgMob::Exception
@@ -31,19 +31,25 @@ module OrgMob
     private def parse_lexed_data_to_json(data : Array(Lexed)) : String
       JSON.build do |json_builder|
         json_builder.object do
-          create_header(data, json_builder)
-          json_builder.field "content" do
-            json_builder.array do
-              parse_from_object(data, json_builder)
-            end
-          end
+          parse_head(data, json_builder)
+          parse_body(data, json_builder)
         end
       end
     end
 
-    private def create_header(data : Array(Lexed), json_builder : JSON::Builder)
+    private def parse_head(data : Array(Lexed), json_builder : JSON::Builder)
       while %i[property keyword].includes?(token_type = data.first[:type])
         parsers_by_type[token_type].call(data, json_builder)
+      end
+    end
+
+    private def parse_body(data : Array(Lexed), json_builder : JSON::Builder)
+      json_builder.field "content" do
+        json_builder.array do
+          while data.any? && ((type = data.first[:type]))
+            parsers_by_type[type].call(data, json_builder)
+          end
+        end
       end
     end
 
@@ -54,6 +60,7 @@ module OrgMob
         header:    ->parse_header(Array(Lexed), JSON::Builder),
         paragraph: ->parse_paragraph(Array(Lexed), JSON::Builder),
         list:      ->parse_list(Array(Lexed), JSON::Builder),
+        new_line:  ->parse_new_line(Array(Lexed), JSON::Builder),
       }
     end
 
@@ -73,28 +80,29 @@ module OrgMob
 
       json_builder.field "properties" do
         json_builder.object do
-          while !end_properties?(data.first)
+          while data.any?
+            return data.shift if end_properties?(data.first)
             token = data.shift
-            raise OrgMob::Exception.new("END Property attribute is missing") if token.nil? || token[:type] != :property
 
             match = token[:match]
             json_builder.field match["property"], match["value"]
           end
-          data.shift
+          raise OrgMob::Exception.new("END Property attribute is missing") if token.nil? || token[:type] != :property
         end
       end
     end
 
     private def parse_header(data : Array(Lexed), json_builder : JSON::Builder)
       token = data.shift
-      level = token[:match]["header_chars"].size
+      title = token[:match]["title"]
+      level = token[:match]["stars"].size
       todo_match = token[:match]["title"].match /^(?<todo_keyword>#{@configuration.keywords})\s(?<title>.*)/
 
       title_content = if todo_match
-                        priority_match = token[:match]["title"].match /\[\#(?<priority_level>[A-Z])\]\s*(?<title>.*)/
+                        priority_match = title.match /\[\#(?<priority_level>[A-Z])\]\s*(?<title>.*)/
                         priority_match ? priority_match["title"] : todo_match["title"]
                       else
-                        token[:match]["title"]
+                        title
                       end
 
       @current_level = level
@@ -125,17 +133,28 @@ module OrgMob
         json_builder.field "children" do
           json_builder.array do
             while data.any? && data.first[:type] == :list
-              json_builder.object do
-                token = data.shift
-                json_builder.field "type", "list-item"
-                json_builder.field "bullet", token[:match]["bullet"]
-                json_builder.field "children" do
-                  parse_text(token[:match]["item"], json_builder)
-                end
-              end
+              parse_list_item(data, json_builder)
             end
           end
         end
+      end
+    end
+
+    private def parse_list_item(data : Array(Lexed), json_builder : JSON::Builder)
+      json_builder.object do
+        token = data.shift
+        json_builder.field "type", "list-item"
+        json_builder.field "bullet", token[:match]["bullet"]
+        json_builder.field "children" do
+          parse_text(token[:match]["item"], json_builder)
+        end
+      end
+    end
+
+    private def parse_new_line(data : Array(Lexed), json_builder : JSON::Builder)
+      data.shift
+      json_builder.object do
+        json_builder.field "type", "new-line"
       end
     end
 
@@ -143,35 +162,21 @@ module OrgMob
       json_builder.array do
         until text.empty?
           case text
-          when /(?<before>.*?)\*(?<inside>[^*]+)\*(?<after>.*)/
-            json_builder.object do
-              json_builder.field "content", $~["before"]
-              json_builder.field "type", "basic"
-            end
-            json_builder.object do
-              json_builder.field "content", $~["inside"]
-              json_builder.field "type", "bold"
-            end
+          when TEXT_WITH_BOLD_CONTENT
+            puts($~)
+            parse_text_regex("bold", $~, json_builder)
             text = $~["after"]
-          when /(?<before>.*?)\/(?<inside>[^\/]+)\/(?<after>.*)/
-            json_builder.object do
-              json_builder.field "content", $~["before"]
-              json_builder.field "type", "basic"
-            end
-            json_builder.object do
-              json_builder.field "content", $~["inside"]
-              json_builder.field "type", "italic"
-            end
+          when TEXT_WITH_ITALIC_CONTENT
+            parse_text_regex("italic", $~, json_builder)
             text = $~["after"]
-          when /(?<before>.*?)_(?<inside>[^_]+)_(?<after>.*)/
-            json_builder.object do
-              json_builder.field "content", $~["before"]
-              json_builder.field "type", "basic"
-            end
-            json_builder.object do
-              json_builder.field "content", $~["inside"]
-              json_builder.field "type", "underline"
-            end
+          when TEXT_WITH_UNDERLINE_CONTENT
+            parse_text_regex("underline", $~, json_builder)
+            text = $~["after"]
+          when TEXT_WITH_VERBATIM_CONTENT
+            parse_text_regex("verbatim", $~, json_builder)
+            text = $~["after"]
+          when TEXT_WITH_CODE_CONTENT
+            parse_text_regex("code", $~, json_builder)
             text = $~["after"]
           else
             json_builder.object do
@@ -196,9 +201,14 @@ module OrgMob
       @current_level == 0
     end
 
-    private def parse_from_object(data : Array(Lexed), json_builder : JSON::Builder)
-      while data.any? && ((type = data.first[:type]))
-        parsers_by_type[type].call(data, json_builder)
+    private def parse_text_regex(emphasis_type : String, match_data : Regex::MatchData, json_builder : JSON::Builder)
+      json_builder.object do
+        json_builder.field "content", match_data["before"]
+        json_builder.field "type", "basic"
+      end
+      json_builder.object do
+        json_builder.field "content", match_data["inside"]
+        json_builder.field "type", emphasis_type
       end
     end
   end
