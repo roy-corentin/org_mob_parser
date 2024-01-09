@@ -62,7 +62,7 @@ parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Form
 + [ ] parse title properties
 
 *** Binary
-+ [ ] binary to parse string or file
++ [X] binary to parse string or file
 
 ** Contributing
 
