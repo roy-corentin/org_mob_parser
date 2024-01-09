@@ -54,7 +54,15 @@ parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Form
 
 ** Development
 
-TODO: Write development instruction
+*** Parser System
++ [X] parse emphasis
++ [X] parse top file properties
++ [ ] parse block code
++ [ ] parse block quote
++ [ ] parse title properties
+
+*** Binary
++ [ ] binary to parse string or file
 
 ** Contributing
 
