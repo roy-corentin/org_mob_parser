@@ -1,6 +1,6 @@
 * ORG MOB PARSER
 
-OrgMobParser is a high-performance parser for [[https://orgmode.org/][Org]] files, powered by the Crystal programming language.
+OrgMobParser is a high-performance parser for [[https://orgmode.org/][Org]] files, powered by the [[https://crystal-lang.org/][Crystal]] programming language.
 
 ** Introduction
 OrgMobParser was developed with the primary purpose of serving as the parsing engine for a backend application known as =OrgMob= (Work in Progress).
