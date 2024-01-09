@@ -67,6 +67,9 @@ parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Form
 *** Binary
 + [X] binary to parse string or file
 
+*** Project
++ [ ] Add benchmark
+
 ** Contributing
 
 1. Fork it (<https://github.com/roy-corentin/org_mob_parser/fork>)
