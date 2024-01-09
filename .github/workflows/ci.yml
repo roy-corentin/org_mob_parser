@@ -3,24 +3,36 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  build:
+  common_steps:
     runs-on: ubuntu-latest
     steps:
       - name: Download source
         uses: actions/checkout@v2
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
-      - name: Build
-        run: crystal build src/parser.cr
+
   specs:
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
+      - uses:
+        job_id: common_steps
       - name: Run tests
         run: crystal spec
+
   format:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     needs: [specs]
     steps:
+      - uses:
+        job_id: common_steps
       - name: Check formatting
         run: crystal tool format --check
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [specs]
+    steps:
+      - uses:
+        job_id: common_steps
+      - name: Build
+        run: crystal build src/parser.cr
