@@ -57,8 +57,8 @@ parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Form
 *** Parser System
 + [X] parse emphasis
 + [X] parse top file properties
-+ [ ] parse block code
-+ [ ] parse block quote
++ [X] parse block code
++ [X] parse block quote
 + [ ] parse title properties
 
 *** Parser Lib
