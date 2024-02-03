@@ -60,7 +60,7 @@ parser.parse("./path_to_org_file") # Return a json in the OrgMob Format
 + [X] parse top file properties
 + [X] parse block code
 + [X] parse block quote
-+ [ ] parse title properties
++ [X] parse title properties
 
 *** Parser Lib
 + [X] accept file to parse
