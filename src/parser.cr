@@ -18,17 +18,17 @@ module OrgMob
       yield @configuration
     end
 
-    def parse(data : String) : String
-      splited_data = data.split('\n')
-      lexed_data = @lexer.call(splited_data)
-      json_text = parse_lexed_data_to_json(lexed_data)
+    def parse(org_text : String) : String
+      org_lines = org_text.split('\n')
+      lexed_data = @lexer.call(org_lines)
+      json_text = lexed_data_to_json(lexed_data)
     rescue error : OrgMob::Exception
       error.json_content
     else
       json_text
     end
 
-    private def parse_lexed_data_to_json(data : Array(Lexed)) : String
+    private def lexed_data_to_json(data : Array(Lexed)) : String
       JSON.build do |json_builder|
         json_builder.object do
           parse_head(data, json_builder)
@@ -51,7 +51,7 @@ module OrgMob
     end
 
     private def parse_body(data : Array(Lexed), json_builder : JSON::Builder)
-      json_builder.field "content" do
+      json_builder.field "body" do
         json_builder.array do
           while data.any? && ((token_type = data.first[:type]))
             parsers_by_type[token_type].call(data, json_builder)
@@ -67,6 +67,7 @@ module OrgMob
         header:    ->parse_header(Array(Lexed), JSON::Builder),
         paragraph: ->parse_paragraph(Array(Lexed), JSON::Builder),
         list:      ->parse_list(Array(Lexed), JSON::Builder),
+        block:     ->parse_block(Array(Lexed), JSON::Builder),
         new_line:  ->parse_new_line(Array(Lexed), JSON::Builder),
       }
     end
@@ -84,7 +85,7 @@ module OrgMob
               json_builder.field match["property"], match["value"]
             end
           end
-          raise OrgMob::Exception.new("END Property attribute is missing") if !data.any? || data.shift[:type] != :property
+          raise OrgMob::Exception.new("END Property attribute is missing") if !data.any? || !end_properties?(data.shift)
         end
       end
     end
@@ -162,6 +163,48 @@ module OrgMob
       end
     end
 
+    private def parse_block(data : Array(Lexed), json_builder : JSON::Builder)
+      raise OrgMob::Exception.new("Block start token is missing") unless beginning_block?(data.first)
+
+      begin_block = data.shift
+      block_type = begin_block[:match]["block_type"]
+
+      json_builder.object do
+        json_builder.field "type", "block_#{block_type.downcase}"
+        parse_block_code_options(begin_block, json_builder) if block_type.match(/^src$/i)
+        if block_type.match(/^(quote|example)$/i)
+          json_builder.field "children" do
+            parse_block_paragraph_content(data, json_builder)
+          end
+        else
+          json_builder.field "children", parse_block_basic_content(data, json_builder)
+        end
+      end
+    end
+
+    private def parse_block_basic_content(data : Array(Lexed), json_builder : JSON::Builder)
+      content = ""
+      while data.any? && !end_block?(data.first)
+        content += data.shift[:content]
+      end
+      raise OrgMob::Exception.new("Block end token is missing") if !data.any? || !end_block?(data.shift)
+      content
+    end
+
+    private def parse_block_paragraph_content(data : Array(Lexed), json_builder : JSON::Builder)
+      json_builder.array do
+        while data.any? && !end_block?(data.first)
+          parse_paragraph(data, json_builder)
+        end
+        raise OrgMob::Exception.new("Block end token is missing") if !data.any? || !end_block?(data.shift)
+      end
+    end
+
+    private def parse_block_code_options(begin_block : Lexed, json_builder : JSON::Builder)
+      options = begin_block[:match]["options"].split
+      json_builder.field "language", options.shift
+    end
+
     private def parse_new_line(data : Array(Lexed), json_builder : JSON::Builder)
       data.shift
       json_builder.object do
@@ -197,11 +240,19 @@ module OrgMob
     end
 
     private def beginning_properties?(data : Array(Lexed))
-      data.shift[:match]["property"] == "PROPERTIES"
+      data.shift[:match]["property"].match(/^properties$/i)
     end
 
     private def end_properties?(element : Lexed)
-      element[:content].match(/end/i)
+      element[:type] == :property && element[:match]["property"].match(/^end$/i)
+    end
+
+    private def beginning_block?(element : Lexed)
+      element[:match]["type"].match(/^begin$/i)
+    end
+
+    private def end_block?(element : Lexed)
+      element[:type] == :block && element[:match]["type"].match(/^end$/i)
     end
 
     private def first_header?

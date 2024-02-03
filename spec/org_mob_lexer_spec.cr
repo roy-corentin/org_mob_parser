@@ -87,8 +87,8 @@ describe OrgMob::Lexer do
           lexer = OrgMob::Lexer.new
           result = lexer.call(["#+begin_src elisp", "(sum 1, 2)", "#+end_src"])
 
-          result.first[:type].should eq(:code)
-          result.last[:type].should eq(:code)
+          result.first[:type].should eq(:block)
+          result.last[:type].should eq(:block)
         end
       end
       context "upcase" do
@@ -96,8 +96,8 @@ describe OrgMob::Lexer do
           lexer = OrgMob::Lexer.new
           result = lexer.call(["#+BEGIN_SRC elisp", "(sum 1, 2)", "#+END_SRC"])
 
-          result.first[:type].should eq(:code)
-          result.last[:type].should eq(:code)
+          result.first[:type].should eq(:block)
+          result.last[:type].should eq(:block)
         end
       end
     end
@@ -108,8 +108,8 @@ describe OrgMob::Lexer do
           lexer = OrgMob::Lexer.new
           result = lexer.call(["#+begin_quote", "I'm a quote", "#+end_quote"])
 
-          result.first[:type].should eq(:quote)
-          result.last[:type].should eq(:quote)
+          result.first[:type].should eq(:block)
+          result.last[:type].should eq(:block)
         end
       end
       context "upcase" do
@@ -117,8 +117,8 @@ describe OrgMob::Lexer do
           lexer = OrgMob::Lexer.new
           result = lexer.call(["#+BEGIN_quote elisp", "I'm a quote", "#+END_quote"])
 
-          result.first[:type].should eq(:quote)
-          result.last[:type].should eq(:quote)
+          result.first[:type].should eq(:block)
+          result.last[:type].should eq(:block)
         end
       end
     end
