@@ -18,8 +18,8 @@ module OrgMob
       yield @configuration
     end
 
-    def parse(org_text : String) : String
-      org_lines = org_text.split('\n')
+    def parse(data : String) : String
+      org_lines = get_org_lines(data)
       lexed_data = @lexer.call(org_lines)
       json_text = lexed_data_to_json(lexed_data)
     rescue error : OrgMob::Exception
@@ -275,6 +275,13 @@ module OrgMob
         json_builder.field "content", text
         json_builder.field "type", "basic"
       end
+    end
+
+    private def get_org_lines(data : String) : Array(String)
+      if File.exists?(data)
+        data = File.read(data)
+      end
+      data.split('\n')
     end
   end
 end

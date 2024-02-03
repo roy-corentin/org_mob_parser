@@ -50,6 +50,7 @@ end
 #+begin_src crystal
 parser = OrgMob::Parser.new
 parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Format
+parser.parse("./path_to_org_file") # Return a json in the OrgMob Format
 #+end_src
 
 ** Development
@@ -62,7 +63,7 @@ parser.parse("* Your Org\nyes your org note") # Return a json in the OrgMob Form
 + [ ] parse title properties
 
 *** Parser Lib
-+ [ ] accept file to parse
++ [X] accept file to parse
 
 *** Parser Binary
 + [X] binary to parse string or file
