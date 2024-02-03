@@ -172,7 +172,7 @@ module OrgMob
       json_builder.object do
         json_builder.field "type", "block_#{block_type.downcase}"
         parse_block_code_options(begin_block, json_builder) if block_type.match(/^src$/i)
-        if block_type.match(/^(quote|example)$/i)
+        if block_type.match(/^(quote|example|comment)$/i)
           json_builder.field "children" do
             parse_block_paragraph_content(data, json_builder)
           end
