@@ -111,5 +111,12 @@ describe OrgMob::Parser do
         parser.parse("#+begin_example\nThis is a block example\n#+end_example").should eq(expected)
       end
     end
+
+    context "table" do
+      it "should parse a table" do
+        expected = "{\"header\":{},\"body\":[{\"type\":\"table\",\"children\":{\"table-header\":[[{\"content\":\"Name\",\"type\":\"basic\"}],[{\"content\":\"Age\",\"type\":\"basic\"}]],\"table-rows\":[{\"children\":[[{\"content\":\"John\",\"type\":\"basic\"}],[{\"content\":\"25\",\"type\":\"basic\"}]]}]}}]}"
+        parser.parse("| Name | Age |\n|------+-----|\n| John | 25 |").should eq(expected)
+      end
+    end
   end
 end

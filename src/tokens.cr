@@ -4,6 +4,7 @@ module OrgMob
   BLOCK_REGEX     = /^#\+(?<type>begin|end)_(?<block_type>\w+)(?<options>.*)/i
   KEYWORD_REGEX   = /^#\+(?<key>\w+):(?<value>.+)/i
   PROPERTY_REGEX  = /^:(?<property>\w+):\s*(?<value>.*)/i
+  TABLE_REGEX     = /^\|(?<row>.*)\|/i
   NEW_LINE_REGEX  = /^$/i
   PARAGRAPH_REGEX = /(.)*/i
 
@@ -20,6 +21,7 @@ module OrgMob
     {type: :block, regex: BLOCK_REGEX},
     {type: :keyword, regex: KEYWORD_REGEX},
     {type: :property, regex: PROPERTY_REGEX},
+    {type: :table, regex: TABLE_REGEX},
     {type: :new_line, regex: NEW_LINE_REGEX},
     {type: :paragraph, regex: PARAGRAPH_REGEX},
   ]

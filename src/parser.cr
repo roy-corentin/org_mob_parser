@@ -68,6 +68,7 @@ module OrgMob
         paragraph: ->parse_paragraph(Array(Lexed), JSON::Builder),
         list:      ->parse_list(Array(Lexed), JSON::Builder),
         block:     ->parse_block(Array(Lexed), JSON::Builder),
+        table:     ->parse_table(Array(Lexed), JSON::Builder),
         new_line:  ->parse_new_line(Array(Lexed), JSON::Builder),
       }
     end
@@ -203,6 +204,53 @@ module OrgMob
     private def parse_block_code_options(begin_block : Lexed, json_builder : JSON::Builder)
       options = begin_block[:match]["options"].split
       json_builder.field "language", options.shift
+    end
+
+    private def parse_table(data : Array(Lexed), json_builder : JSON::Builder)
+      first_row = data.shift
+      header = [] of String
+      rows = [] of Array(String)
+
+      if next_element_is_header_separation?(data)
+        header = first_row[:match]["row"].split("|").map(&.strip)
+        data.shift
+      else
+        rows << first_row[:match]["row"].split("|").map(&.strip)
+      end
+
+      while data.any? && data.first[:type] == :table
+        rows << data.shift[:match]["row"].split("|").map(&.strip)
+      end
+
+      json_builder.object do
+        json_builder.field "type", "table"
+        json_builder.field "children" do
+          json_builder.object do
+            json_builder.field "table-header" do
+              json_builder.array do
+                header.map { |cell| parse_text(cell, json_builder) }
+              end
+            end
+            json_builder.field "table-rows" { parse_rows(rows, json_builder) }
+          end
+        end
+      end
+    end
+
+    private def parse_rows(rows : Array(Array(String)), json_builder : JSON::Builder)
+      json_builder.array do
+        rows.each do |row|
+          json_builder.object do
+            json_builder.field "children" do
+              json_builder.array { row.each { |cell| parse_text(cell, json_builder) } }
+            end
+          end
+        end
+      end
+    end
+
+    private def next_element_is_header_separation?(data : Array(Lexed))
+      data.first[:content].match /^\|(-\+?)+\|$/
     end
 
     private def parse_new_line(data : Array(Lexed), json_builder : JSON::Builder)
